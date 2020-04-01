@@ -1,6 +1,8 @@
 const question = document.getElementById('question');
 const choices = Array.from(document.getElementsByClassName('choice-text'));
-console.log(choices);
+const questionCounterText = document.getElementById('questionCounter');
+const scoreText = document.getElementById('score');
+//console.log(choices);
 
 let currentQuestion = {};
 let acceptingAnswers = false;
@@ -40,7 +42,7 @@ let questions = [
 
 // constants 
 
-const correct_answer = 10;
+const correct_bonus = 10;
 const max_questions =3;
 
 //functions 
@@ -59,6 +61,9 @@ function getNewQuestion(){
     //update question 
     questionCounter++;
 
+    //question text display on hud 
+    questionCounterText.innerText = `${questionCounter} / ${max_questions}`
+
     //Random Question generator
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
@@ -73,7 +78,7 @@ function getNewQuestion(){
 
     acceptingAnswers = true;
 };
-
+// choices loop that listens for clicks to choice of player then applys class
 choices.forEach( choice => {
     choice.addEventListener('click', e => {
         if(!acceptingAnswers) return;
@@ -84,6 +89,10 @@ choices.forEach( choice => {
         const selectedAnswer = selectedChoice.dataset['number'];
         //apply class
         const classToApply = selectedAnswer == currentQuestion.answer ? 'correct' : 'incorrect';
+
+        if(classToApply === 'correct'){
+            incrementScore(correct_bonus);
+        }
 
         //added new class selected choices
         selectedChoice.parentElement.classList.add(classToApply);
@@ -98,6 +107,11 @@ choices.forEach( choice => {
     });
 
 });
+
+function incrementScore(num){
+    score += num;
+    scoreText.innerText = score; 
+}
 
 
 //same as startGame = () =>{}

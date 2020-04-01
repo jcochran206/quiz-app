@@ -53,10 +53,10 @@ function startGame(){
 
 function getNewQuestion(){
     if(availableQuestions === 0 || questionCounter >= max_questions){
-        //go to end 
+        //conditional to go to finalscore page
         return window.location.assign('/end.html');
     }
-    
+    //update question 
     questionCounter++;
 
     //Random Question generator
@@ -68,7 +68,7 @@ function getNewQuestion(){
         const number = choice.dataset['number'];
         choice.innerText = currentQuestion['choice' + number];
     });
-
+    //remove question for array of available quetions
     availableQuestions.splice(questionIndex,1);
 
     acceptingAnswers = true;
@@ -82,7 +82,19 @@ choices.forEach( choice => {
         acceptingAnswers = false;
         const selectedChoice = e.target;
         const selectedAnswer = selectedChoice.dataset['number'];
-        getNewQuestion();
+        //apply class
+        const classToApply = selectedAnswer == currentQuestion.answer ? 'correct' : 'incorrect';
+
+        //added new class selected choices
+        selectedChoice.parentElement.classList.add(classToApply);
+
+        setTimeout(() => {
+            selectedChoice.parentElement.classList.remove(classToApply);
+            getNewQuestion();
+          }, 1000);
+
+
+        console.log(selectedAnswer == currentQuestion.answer);
     });
 
 });
